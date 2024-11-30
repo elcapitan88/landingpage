@@ -14,8 +14,10 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '${APP_DOMAIN}',
-    '*',  # Temporarily add this for debugging
+    '*',  
 ]
+
+HEALTH_CHECK_ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
