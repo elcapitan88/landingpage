@@ -5,8 +5,8 @@ services:
     github:
       branch: main
       deploy_on_push: true
-      repo: elcapitan88/landingpageprjct  # Replace with your actual repo name
-    source_dir: backend  # Specify the backend directory
+      repo: elcapitan88/landingpageprjct
+    source_dir: backend
     envs:
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
@@ -14,8 +14,6 @@ services:
         value: /workspace/backend
       - key: PYTHONUNBUFFERED
         value: "1"
-      - key: DISABLE_COLLECTSTATIC
-        value: "0"
       - key: DEBUG
         scope: RUN_AND_BUILD_TIME
         value: "False"
@@ -24,7 +22,7 @@ services:
         value: ${APP_DOMAIN}
       - key: DATABASE_URL
         scope: RUN_AND_BUILD_TIME
-        value: ${db.DATABASE_URL}
+        value: ${DATABASE_URL}
       - key: SECRET_KEY
         scope: RUN_AND_BUILD_TIME
         value: ${SECRET_KEY}
@@ -47,5 +45,5 @@ services:
     instance_size_slug: basic-xs
     routes:
       - path: /
-    buildCommand: cd backend && bash build.sh
-    startCommand: cd backend && gunicorn --chdir /workspace/backend core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120 --log-level debug
+    buildCommand: bash build.sh
+    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120 --log-level debug
