@@ -20,9 +20,6 @@ services:
       - key: ALLOWED_HOSTS
         scope: RUN_AND_BUILD_TIME
         value: ${APP_DOMAIN}
-      - key: DATABASE_URL
-        scope: RUN_AND_BUILD_TIME
-        value: ${DATABASE_URL}
       - key: SECRET_KEY
         scope: RUN_AND_BUILD_TIME
         value: ${SECRET_KEY}
@@ -46,4 +43,4 @@ services:
     routes:
       - path: /
     buildCommand: bash build.sh
-    startCommand: cd /workspace/backend && gunicorn --bind 0.0.0.0:8000 --chdir /workspace/backend core.wsgi:application --workers 2 --timeout 120 --log-level debug
+    startCommand: gunicorn -c gunicorn.conf.py

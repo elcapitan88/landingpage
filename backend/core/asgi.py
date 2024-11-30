@@ -1,13 +1,10 @@
-"""
-ASGI config for core project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
-"""
-
 import os
+import sys
+from pathlib import Path
+
+# Add the project root directory to the Python path
+root_dir = Path(__file__).resolve().parent.parent
+sys.path.append(str(root_dir))
 
 from django.core.asgi import get_asgi_application
 
