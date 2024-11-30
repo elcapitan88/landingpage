@@ -4,20 +4,19 @@ services:
     github:
       branch: main
       deploy_on_push: true
-    source_dir: backend  # Assuming you move Django files to a backend directory
+    source_dir: backend
     build_command: pip install -r requirements.txt
     run_command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
     instance_count: 1
     instance_size_slug: basic-xxs
-    routes:
-      - path: /api
+    environment_slug: python
     envs:
       - key: DJANGO_SETTINGS_MODULE
         scope: RUN_TIME
         value: core.settings
       - key: DATABASE_URL
         scope: RUN_TIME
-        value: ${db.DATABASE_URL}  # DO will inject this
+        value: ${db.DATABASE_URL}
       - key: ALLOWED_HOSTS
         scope: RUN_TIME
         value: ${APP_DOMAIN}
@@ -33,19 +32,22 @@ services:
       - key: STRIPE_WEBHOOK_SECRET
         scope: RUN_TIME
         type: SECRET
+      - key: FRONTEND_URL
+        scope: RUN_TIME
+        value: ${APP_DOMAIN}
+
+  - name: frontend
+    github:
+      branch: main
+      deploy_on_push: true
+    source_dir: frontend
+    build_command: npm install && npm run build
+    run_command: serve -s build
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    environment_slug: node-js
 
 databases:
   - engine: PG
     name: db
     version: "12"
-
-static_sites:
-  - name: frontend
-    github:
-      branch: main
-      deploy_on_push: true
-    source_dir: frontend  # Assuming you move React files to a frontend directory
-    build_command: npm install && npm run build
-    output_dir: build
-    routes:
-      - path: /
