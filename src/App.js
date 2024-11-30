@@ -10,7 +10,6 @@ import {
   HStack, 
   Badge 
 } from '@chakra-ui/react';
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import theme from './theme';
 import Button from './components/common/Button';
 
@@ -159,100 +158,89 @@ const App = () => {
     }
   };
 
-  const initialPayPalOptions = {
-    "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
-    currency: "USD",
-    intent: "capture",
-    components: "buttons",
-    "disable-funding": "credit,card",
-    "enable-funding": "paypal"
-  };
-
   return (
-    <PayPalScriptProvider options={initialPayPalOptions}>
-      <ChakraProvider theme={theme}>
-        <Box minH="100vh" bg="background">
-          <StickyHeader 
-            remainingSpots={remainingSpots} 
-            onOpen={() => setIsModalOpen(true)} 
-          />
+    <ChakraProvider theme={theme}>
+      <Box minH="100vh" bg="background">
+        <StickyHeader 
+          remainingSpots={remainingSpots} 
+          onOpen={() => setIsModalOpen(true)} 
+        />
 
-          <Container maxW="7xl" pt={4}>
-            <Hero
-              onOpen={() => setIsModalOpen(true)}
-              remainingSpots={remainingSpots}
-            />
-
-            <HowItWorks />
-            <TimeSavings />
-            <SecurityBadges />
-            <Features />
-            <WhyNowSection />
-            <FAQ />
-
-            <VStack spacing={6} py={20} textAlign="center">
-              <HStack spacing={2}>
-                <Badge colorScheme="red" px={2} py={1}>
-                  ONLY {remainingSpots} SPOTS LEFT
-                </Badge>
-                <Text color="yellow.200" fontWeight="semibold">
-                  Save $1,700 Today!
-                </Text>
-              </HStack>
-
-              <Heading
-                fontSize={{ base: "3xl", md: "4xl" }}
-                bgGradient="linear(to-r, primary, secondary)"
-                bgClip="text"
-              >
-                Ready to Automate Your Trading?
-              </Heading>
-              
-              <Text fontSize="lg" color="whiteAlpha.900" maxW="2xl">
-                Join the revolution in automated trading. Don't miss out on this one-time lifetime access offer.
-              </Text>
-
-              {remainingSpots <= 10 && (
-                <Text color="red.300" fontSize="sm" fontWeight="bold">
-                  ⚠️ Almost sold out! Only {remainingSpots} spots remaining at this price
-                </Text>
-              )}
-
-              <Button
-                variant="primary"
-                width={{ base: "full", md: "50%" }}
-                onClick={() => setIsModalOpen(true)}
-                isDisabled={remainingSpots === 0}
-              >
-                Get Started Now - $299
-              </Button>
-              
-              <Text fontSize="sm" color="whiteAlpha.800">
-                🔒 30-day money-back guarantee • Limited time offer
-              </Text>
-            </VStack>
-          </Container>
-
-          <LifetimeModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            email={email}
-            setEmail={setEmail}
-            isSubmitting={isSubmitting}
-            remainingSpots={remainingSpots}
-            onPaymentSuccess={handlePaymentSuccess}
-          />
-
-          <ExitIntentPopup 
-            onSubscribe={handleEarlyAccess}
-            onPurchase={() => setIsModalOpen(true)}
+        <Container maxW="7xl" pt={4}>
+          <Hero
+            onOpen={() => setIsModalOpen(true)}
             remainingSpots={remainingSpots}
           />
 
-          <RecentSignupsTicker />
-        </Box>
-      </ChakraProvider>
-    </PayPalScriptProvider>
+          <HowItWorks />
+          <TimeSavings />
+          <SecurityBadges />
+          <Features />
+          <WhyNowSection />
+          <FAQ />
+
+          <VStack spacing={6} py={20} textAlign="center">
+            <HStack spacing={2}>
+              <Badge colorScheme="red" px={2} py={1}>
+                ONLY {remainingSpots} SPOTS LEFT
+              </Badge>
+              <Text color="yellow.200" fontWeight="semibold">
+                Save $1,700 Today!
+              </Text>
+            </HStack>
+
+            <Heading
+              fontSize={{ base: "3xl", md: "4xl" }}
+              bgGradient="linear(to-r, primary, secondary)"
+              bgClip="text"
+            >
+              Ready to Automate Your Trading?
+            </Heading>
+            
+            <Text fontSize="lg" color="whiteAlpha.900" maxW="2xl">
+              Join the revolution in automated trading. Don't miss out on this one-time lifetime access offer.
+            </Text>
+
+            {remainingSpots <= 10 && (
+              <Text color="red.300" fontSize="sm" fontWeight="bold">
+                ⚠️ Almost sold out! Only {remainingSpots} spots remaining at this price
+              </Text>
+            )}
+
+            <Button
+              variant="primary"
+              width={{ base: "full", md: "50%" }}
+              onClick={() => setIsModalOpen(true)}
+              isDisabled={remainingSpots === 0}
+            >
+              Get Started Now - $299
+            </Button>
+            
+            <Text fontSize="sm" color="whiteAlpha.800">
+              🔒 30-day money-back guarantee • Limited time offer
+            </Text>
+          </VStack>
+        </Container>
+
+        <LifetimeModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          email={email}
+          setEmail={setEmail}
+          isSubmitting={isSubmitting}
+          remainingSpots={remainingSpots}
+          onPaymentSuccess={handlePaymentSuccess}
+        />
+
+        <ExitIntentPopup 
+          onSubscribe={handleEarlyAccess}
+          onPurchase={() => setIsModalOpen(true)}
+          remainingSpots={remainingSpots}
+        />
+
+        <RecentSignupsTicker />
+      </Box>
+    </ChakraProvider>
   );
 };
 
