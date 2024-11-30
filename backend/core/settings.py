@@ -76,10 +76,42 @@ CORS_ALLOW_CREDENTIALS = True
 # Database settings
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',  # Fallback to SQLite if no DATABASE_URL
+        default='sqlite:///db.sqlite3',
         conn_max_age=600,
+        conn_health_checks=True,
         ssl_require=not DEBUG
     )
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'gunicorn.access': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'gunicorn.error': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
 }
 
 # Static files (CSS, JavaScript, Images)
