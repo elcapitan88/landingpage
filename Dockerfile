@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy React files
 COPY package.json .
-COPY package-lock.json* .
+COPY package-lock.json .    # Removed the wildcard *
 COPY public/ public/
 COPY src/ src/
 
