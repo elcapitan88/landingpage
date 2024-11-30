@@ -1,35 +1,18 @@
 name: atomik-trading
 services:
   - name: api
-    github:
-      branch: main
-      deploy_on_push: true
     source_dir: backend
-    dockerfile_path: Dockerfile
-    instance_count: 1
+    environment_slug: python
     instance_size_slug: basic-xxs
     envs:
       - key: DJANGO_SETTINGS_MODULE
-        scope: RUN_TIME
         value: core.settings
       - key: DATABASE_URL
-        scope: RUN_TIME
         value: ${db.DATABASE_URL}
-      - key: ALLOWED_HOSTS
-        scope: RUN_TIME
-        value: ${APP_DOMAIN}
-      - key: DEBUG
-        scope: RUN_TIME
-        value: "False"
       - key: SECRET_KEY
-        scope: RUN_TIME
         type: SECRET
       - key: STRIPE_SECRET_KEY
-        scope: RUN_TIME
         type: SECRET
-      - key: FRONTEND_URL
-        scope: RUN_TIME
-        value: ${APP_DOMAIN}
 
 databases:
   - engine: PG
