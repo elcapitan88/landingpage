@@ -1,0 +1,76 @@
+name: atomik-trading-frontend
+services:
+  - name: web
+    source_dir: .
+    environment_slug: node-js
+    build_command: npm ci && npm run build
+    run_command: npm start
+    http_port: 3000
+    instance_size: basic-xxs
+    instance_count: 1
+    github:
+      branch: main
+      deploy_on_push: true
+    routes:
+      - path: /
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: REACT_APP_API_URL
+        value: "https://api.atomiktrading.com"
+      - key: REACT_APP_API_VERSION
+        value: "v1"
+      - key: REACT_APP_STRIPE_PUBLISHABLE_KEY
+        type: SECRET
+        value: ${STRIPE_PUBLISHABLE_KEY}
+      - key: REACT_APP_STRIPE_PRICE_ID
+        value: "price_1QQfgtDw86VJEB1aOvBsgkAJ"
+      - key: REACT_APP_ENABLE_WAITLIST
+        value: "true"
+      - key: REACT_APP_ENABLE_LIFETIME_OFFER
+        value: "true"
+      - key: REACT_APP_LIFETIME_PRICE
+        value: "299"
+      - key: REACT_APP_REGULAR_PRICE
+        value: "1999"
+      - key: REACT_APP_INITIAL_SPOTS
+        value: "100"
+      - key: REACT_APP_COMPANY_NAME
+        value: "Atomik Trading"
+      - key: REACT_APP_SUPPORT_EMAIL
+        value: "support@atomiktrading.com"
+      - key: REACT_APP_ENVIRONMENT
+        value: "production"
+      
+static_sites:
+  - name: atomik-trading-frontend-static
+    environment_slug: static
+    github:
+      branch: main
+      repo_clone_url: ${FRONTEND_REPO_URL}
+      deploy_on_push: true
+    build_command: npm ci && npm run build
+    output_dir: build
+    catchall_document: index.html
+    routes:
+      - path: /
+    envs:
+      - key: NODE_ENV
+        value: production
+
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+
+cors:
+  allow_origins:
+    - exact: "https://api.atomiktrading.com"
+    - exact: "https://atomiktrading.com"
+    - prefix: "https://*.digitalocean.app"
+  allow_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  max_age: "86400"

@@ -15,10 +15,8 @@ ALLOWED_HOSTS = [
 CORS_ALLOWED_ORIGINS = [
     'https://atomiktrading.com',
     'https://www.atomiktrading.com',
-    'https://*.ondigitalocean.app'
+    'http://localhost:3000',
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 # Update database settings (using dj-database-url)
 DATABASES = {
