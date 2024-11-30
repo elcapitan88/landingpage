@@ -25,8 +25,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Install npm dependencies and build React app
+WORKDIR /app/frontend
 RUN npm install
 RUN npm run build
+
+# Back to main directory
+WORKDIR /app
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
