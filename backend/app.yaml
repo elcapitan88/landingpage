@@ -1,14 +1,17 @@
-name: atomik-trading
+name: atomik-trading-backend
 services:
   - name: web
     environment_slug: python
     github:
       branch: main
       deploy_on_push: true
-    source_dir: /
+      repo: elcapitan88/landingpageprjct  # Replace with your actual repo name
+    source_dir: backend  # Specify the backend directory
     envs:
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
+      - key: PYTHONPATH
+        value: /workspace/backend
       - key: PYTHONUNBUFFERED
         value: "1"
       - key: DISABLE_COLLECTSTATIC
@@ -39,10 +42,10 @@ services:
         value: ${STRIPE_LIFETIME_PRICE_ID}
       - key: FRONTEND_URL
         scope: RUN_AND_BUILD_TIME
-        value: ${FRONTEND_URL}
+        value: "https://atomiktrading.com"
     http_port: 8000
     instance_size_slug: basic-xs
     routes:
       - path: /
-    buildCommand: bash build.sh
-    startCommand: cd ${APP_DIR} && gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 --chdir ./ core.wsgi:application
+    buildCommand: cd backend && bash build.sh
+    startCommand: cd backend && gunicorn --chdir /workspace/backend core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120 --log-level debug
