@@ -5,11 +5,9 @@ services:
       branch: main
       deploy_on_push: true
     source_dir: backend
-    build_command: pip install -r requirements.txt
-    run_command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    dockerfile_path: Dockerfile
     instance_count: 1
     instance_size_slug: basic-xxs
-    environment_slug: python
     envs:
       - key: DJANGO_SETTINGS_MODULE
         scope: RUN_TIME
@@ -32,27 +30,6 @@ services:
       - key: FRONTEND_URL
         scope: RUN_TIME
         value: ${APP_DOMAIN}
-
-  - name: frontend
-    github:
-      branch: main
-      deploy_on_push: true
-    source_dir: frontend
-    build_command: npm install && npm run build
-    run_command: serve -s build
-    instance_count: 1
-    instance_size_slug: basic-xxs
-    environment_slug: node-js
-    envs:
-      - key: REACT_APP_STRIPE_PUBLISHABLE_KEY
-        scope: BUILD_TIME
-        type: SECRET
-      - key: REACT_APP_API_URL
-        scope: BUILD_TIME
-        value: ${APP_DOMAIN}
-      - key: REACT_APP_STRIPE_PRICE_ID
-        scope: BUILD_TIME
-        value: price_1QQfgtDw86VJEB1aOvBsgkAJ
 
 databases:
   - engine: PG
