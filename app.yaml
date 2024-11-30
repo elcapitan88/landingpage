@@ -29,9 +29,6 @@ services:
       - key: STRIPE_SECRET_KEY
         scope: RUN_TIME
         type: SECRET
-      - key: STRIPE_WEBHOOK_SECRET
-        scope: RUN_TIME
-        type: SECRET
       - key: FRONTEND_URL
         scope: RUN_TIME
         value: ${APP_DOMAIN}
