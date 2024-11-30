@@ -5,21 +5,16 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-# Update allowed hosts
 ALLOWED_HOSTS = [
-    '.digitalocean.app',  # Allow DigitalOcean app subdomains
+    '.digitalocean.app',
     'api.atomiktrading.com',
     'localhost',
     '127.0.0.1',
+    '${APP_DOMAIN}',
+    '*',  # Temporarily add this for debugging
 ]
 
 # Application definition
@@ -38,7 +33,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Add CORS middleware
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -74,25 +69,20 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-ALLOWED_HOSTS = [
-    '.digitalocean.app',  # Already present
-    'api.atomiktrading.com',
-    'localhost',
-    '127.0.0.1',
-    # Add your DigitalOcean app URL
-    '${APP_DOMAIN}',  # This will be replaced by DigitalOcean
-]
-
 CORS_ALLOW_CREDENTIALS = True
 
-# Update database settings (using dj-database-url)
+# Database settings
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
+        default='sqlite:///db.sqlite3',  # Fallback to SQLite if no DATABASE_URL
         conn_max_age=600,
         ssl_require=not DEBUG
     )
 }
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,7 +106,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -127,7 +116,7 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
@@ -137,5 +126,4 @@ STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET')
 STRIPE_LIFETIME_PRICE_ID = os.getenv('STRIPE_LIFETIME_PRICE_ID')
 
-# Frontend URL for redirect after payment
 FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://atomiktrading.com')
