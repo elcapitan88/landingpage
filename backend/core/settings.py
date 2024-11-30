@@ -75,6 +75,15 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
 
+ALLOWED_HOSTS = [
+    '.digitalocean.app',  # Already present
+    'api.atomiktrading.com',
+    'localhost',
+    '127.0.0.1',
+    # Add your DigitalOcean app URL
+    '${APP_DOMAIN}',  # This will be replaced by DigitalOcean
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Update database settings (using dj-database-url)
@@ -108,10 +117,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files settings
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

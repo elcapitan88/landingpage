@@ -1,1 +1,1 @@
-web: cd $APP_DIR && gunicorn --bind 0.0.0.0:8000 --workers 2 --timeout 120 --chdir ./ core.wsgi:application
+web: gunicorn --chdir /workspace/backend core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120 --log-level debug
