@@ -18,19 +18,10 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Django project files first
-COPY manage.py .
-COPY core/ core/
-COPY prelaunch/ prelaunch/
-COPY requirements.txt .
+COPY . /app/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy React files
-COPY package.json .
-COPY package-lock.json .    # Removed the wildcard *
-COPY public/ public/
-COPY src/ src/
 
 # Install npm dependencies and build React app
 RUN npm install
