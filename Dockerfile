@@ -17,20 +17,24 @@ RUN apt-get update && \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy Django project files first
+COPY manage.py .
+COPY core/ core/
+COPY prelaunch/ prelaunch/
 COPY requirements.txt .
+
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
-COPY . .
+# Copy React files
+COPY package.json .
+COPY package-lock.json* .
+COPY public/ public/
+COPY src/ src/
 
 # Install npm dependencies and build React app
-WORKDIR /app/frontend
 RUN npm install
 RUN npm run build
-
-# Back to main directory
-WORKDIR /app
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
