@@ -10,12 +10,20 @@ services:
     envs:
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
+        scope: RUN_AND_BUILD_TIME
       - key: PYTHONPATH
         value: /workspace/backend
+        scope: RUN_AND_BUILD_TIME
       - key: DEBUG
         value: "True"
+        scope: RUN_AND_BUILD_TIME
       - key: ALLOWED_HOSTS
         value: "*"
+        scope: RUN_AND_BUILD_TIME
     instance_size_slug: basic-xs
     http_port: 8000
-    run_command: python manage.py runserver 0.0.0.0:8000
+    build_command: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    run_command: cd /workspace/backend && gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --log-level debug
