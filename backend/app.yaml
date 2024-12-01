@@ -10,60 +10,12 @@ services:
     envs:
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
-        scope: RUN_AND_BUILD_TIME
       - key: PYTHONPATH
         value: /workspace/backend
-        scope: RUN_AND_BUILD_TIME
-      - key: PYTHONUNBUFFERED
-        value: "1"
-        scope: RUN_AND_BUILD_TIME
       - key: DEBUG
-        scope: RUN_AND_BUILD_TIME
-        value: "False"
-      - key: DJANGO_ALLOWED_HOSTS
-        scope: RUN_AND_BUILD_TIME
-        value: ".ondigitalocean.app,api.atomiktrading.com"
-      - key: PORT
-        scope: RUN_AND_BUILD_TIME
-        value: "8000"
-      - key: DATABASE_URL
-        scope: RUN_AND_BUILD_TIME
-        value: ${DATABASE_URL}
-      - key: SECRET_KEY
-        scope: RUN_AND_BUILD_TIME
-        value: ${SECRET_KEY}
-      - key: STRIPE_SECRET_KEY
-        scope: RUN_AND_BUILD_TIME
-        value: ${STRIPE_SECRET_KEY}
-      - key: STRIPE_PUBLISHABLE_KEY
-        scope: RUN_AND_BUILD_TIME
-        value: ${STRIPE_PUBLISHABLE_KEY}
-      - key: STRIPE_WEBHOOK_SECRET
-        scope: RUN_AND_BUILD_TIME
-        value: ${STRIPE_WEBHOOK_SECRET}
-      - key: STRIPE_LIFETIME_PRICE_ID
-        scope: RUN_AND_BUILD_TIME
-        value: ${STRIPE_LIFETIME_PRICE_ID}
-      - key: FRONTEND_URL
-        scope: RUN_AND_BUILD_TIME
-        value: "https://atomiktrading.com"
-    http_port: 8000
+        value: "True"
+      - key: ALLOWED_HOSTS
+        value: "*"
     instance_size_slug: basic-xs
-    routes:
-      - path: /
-    health_check:
-      http_path: /health/
-      initial_delay_seconds: 45
-      period_seconds: 15
-      timeout_seconds: 10
-      success_threshold: 1
-      failure_threshold: 3
-    buildCommand: bash build.sh
-    startCommand: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --timeout 120 --log-level debug
-    envs:
-      - key: CORS_ALLOWED_ORIGINS
-        scope: RUN_AND_BUILD_TIME
-        value: "https://atomiktrading.com,https://www.atomiktrading.com"
-      - key: CSRF_TRUSTED_ORIGINS
-        scope: RUN_AND_BUILD_TIME
-        value: "https://atomiktrading.com,https://www.atomiktrading.com"
+    http_port: 8000
+    run_command: python manage.py runserver 0.0.0.0:8000
