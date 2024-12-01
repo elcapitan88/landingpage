@@ -1,12 +1,13 @@
-# core/wsgi.py
 import os
 import sys
 from pathlib import Path
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Add the project directory to the Python path
-path = Path(__file__).resolve().parent.parent
-if path not in sys.path:
-    sys.path.append(str(path))
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 
 from django.core.wsgi import get_wsgi_application
 

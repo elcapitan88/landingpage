@@ -5,7 +5,7 @@ services:
     github:
       branch: main
       deploy_on_push: true
-      repo: elcapitan88/landingpage
+      repo: elcapitan88/landingpageprjct
     source_dir: backend
     envs:
       - key: DEBUG
@@ -22,12 +22,11 @@ services:
         value: ${SECRET_KEY}
       - key: PYTHONPATH
         scope: RUN_AND_BUILD_TIME
-        value: "."
+        value: "/workspace/backend"
+      - key: DJANGO_BASE_DIR
+        scope: RUN_AND_BUILD_TIME
+        value: "/workspace/backend"
     http_port: 8000
     instance_size_slug: basic-xs
-    build_command: |
-      python -m pip install --upgrade pip
-      python -m pip install -r requirements.txt
-    run_command: |
-      python -m pip install gunicorn
-      gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2 --log-level debug
+    build_command: pip install -r requirements.txt
+    run_command: bash start.sh
