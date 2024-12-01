@@ -17,6 +17,21 @@ services:
       - key: DJANGO_SETTINGS_MODULE 
         scope: RUN_AND_BUILD_TIME
         value: "core.settings"
+      - key: PORT
+        scope: RUN_AND_BUILD_TIME
+        value: "8000"
+      - key: PYTHONUNBUFFERED
+        scope: RUN_AND_BUILD_TIME
+        value: "1"
+      - key: DJANGO_BASE_DIR
+        scope: RUN_AND_BUILD_TIME
+        value: "/workspace/backend"
     instance_size_slug: basic-xs
-    build_command: pip install -r requirements.txt
-    run_command: python manage.py runserver 0.0.0.0:$PORT
+    build_command: |
+      python -m pip install -r requirements.txt
+      python manage.py check
+    run_command: |
+      echo "Current directory: $(pwd)"
+      echo "Python path: $PYTHONPATH"
+      echo "Django settings module: $DJANGO_SETTINGS_MODULE"
+      python manage.py runserver 0.0.0.0:8000
