@@ -1,4 +1,1 @@
-@"
 Django==5.0.1
-gunicorn==21.2.0
-"@ | Out-File -FilePath requirements.txt -Encoding utf8
