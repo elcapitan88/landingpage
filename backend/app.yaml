@@ -9,4 +9,14 @@ services:
     source_dir: backend
     instance_size_slug: basic-xs
     build_command: pip install -r requirements.txt
-    run_command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2
+    envs:
+      - key: DJANGO_SETTINGS_MODULE
+        value: core.settings
+      - key: PYTHONPATH
+        value: /workspace/backend
+      - key: DISABLE_COLLECTSTATIC
+        value: "1"
+      - key: NO_COLLECTSTATIC
+        value: "1"
+    run_command: gunicorn --chdir backend core.wsgi:application --bind 0.0.0.0:$PORT
+    http_port: 8000
