@@ -9,4 +9,4 @@ services:
     source_dir: backend
     instance_size_slug: basic-xs
     build_command: pip install -r requirements.txt
-    run_command: python manage.py runserver 0.0.0.0:8000
+    run_command: gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 2
