@@ -17,7 +17,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: REACT_APP_API_URL
-        value: "https://api.atomiktrading.com"
+        value: "https://api.atomiktrading.io"
       - key: REACT_APP_API_VERSION
         value: "v1"
       - key: REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -64,8 +64,8 @@ alerts:
 
 cors:
   allow_origins:
-    - exact: "https://api.atomiktrading.com"
-    - exact: "https://atomiktrading.com"
+    - exact: "https://api.atomiktrading.io"
+    - exact: "https://atomiktrading.io"
     - prefix: "https://*.digitalocean.app"
   allow_methods:
     - GET
