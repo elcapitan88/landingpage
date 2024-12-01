@@ -9,4 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', health_check),
     path('health/', health_check),
+    path('api/prelaunch/', include('prelaunch.urls')),  # Add this line
 ]
