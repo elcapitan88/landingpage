@@ -5,24 +5,8 @@ services:
     github:
       branch: main
       deploy_on_push: true
-      repo: elcapitan88/landingpage
+      repo: elcapitan88/landingpageprjct
     source_dir: backend
-    envs:
-      - key: DEBUG
-        scope: RUN_AND_BUILD_TIME
-        value: "True"
-      - key: ALLOWED_HOSTS
-        scope: RUN_AND_BUILD_TIME
-        value: "*"
-      - key: DJANGO_SETTINGS_MODULE 
-        scope: RUN_AND_BUILD_TIME
-        value: "core.settings"
     instance_size_slug: basic-xs
-    http_port: 8000
-    build_command: |
-      python -m pip install --upgrade pip
-      python -m pip install -r requirements.txt
-      python manage.py migrate --noinput
+    build_command: pip install -r requirements.txt
     run_command: python manage.py runserver 0.0.0.0:8000
-    buildpacks:
-      - name: custom

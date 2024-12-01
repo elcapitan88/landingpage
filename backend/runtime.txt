@@ -1,3 +1,0 @@
-@"
-python-3.11.7
-"@ | Out-File -FilePath runtime.txt -Encoding utf8
