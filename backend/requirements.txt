@@ -1,4 +1,3 @@
-# Delete current requirements.txt and create new one with:
 Django==5.1.1
 gunicorn==21.2.0
 django-cors-headers==4.3.1
