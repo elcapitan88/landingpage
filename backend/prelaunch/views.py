@@ -91,38 +91,19 @@ def get_remaining_spots(request):
 def create_checkout_session(request):
     """Create a Stripe checkout session for lifetime membership purchase."""
     try:
-        email = request.data.get('email', '')  # Make email optional
+        logger.info("Creating checkout session with data: %s", request.data)
         
-        # Only validate email if it's provided
-        if email:
-            try:
-                validate_email(email)
-            except ValidationError:
-                return Response({'error': 'Invalid email format'}, status=400)
-
-            # Check if user is already a lifetime member
-            existing_subscriber = Subscriber.objects.filter(
-                email=email,
-                is_lifetime_member=True,
-                payment_status='completed'
-            ).first()
-            
-            if existing_subscriber:
-                return Response({
-                    'error': 'You already have a lifetime membership'
-                }, status=400)
-
-        # Check available slots
-        config = LifetimeMembershipConfig.objects.filter(is_active=True).first()
-        if not config or config.slots_taken >= config.max_slots:
+        email = request.data.get('email', '')
+        price_id = request.data.get('priceId')
+        
+        logger.info("Using price ID: %s", settings.STRIPE_LIFETIME_PRICE_ID)
+        
+        # Check if Stripe key is configured
+        if not settings.STRIPE_SECRET_KEY:
+            logger.error("Stripe secret key is not configured")
             return Response({
-                'error': 'Sorry, all lifetime membership spots have been filled'
-            }, status=400)
-
-        frontend_url = settings.FRONTEND_URL.rstrip('/')
-        success_url = f"{frontend_url}/payment-success?session_id={{CHECKOUT_SESSION_ID}}"
-        if email:
-            success_url += f"&email={email}"
+                'error': 'Stripe configuration is missing'
+            }, status=500)
 
         # Create Stripe checkout session
         checkout_session_params = {
@@ -132,33 +113,37 @@ def create_checkout_session(request):
                 'quantity': 1,
             }],
             'mode': 'payment',
-            'success_url': success_url,
-            'cancel_url': frontend_url,  # Redirect back to frontend homepage
+            'success_url': f"{settings.FRONTEND_URL}/payment-success?session_id={{CHECKOUT_SESSION_ID}}",
+            'cancel_url': settings.FRONTEND_URL,
             'metadata': {
                 'product_type': 'lifetime_membership'
-            },
-            'payment_intent_data': {
-                'description': 'Atomik Trading Lifetime Access - Pre-Launch Special\n\n✨ Unlimited webhook automation\n⚡ 50ms trade execution\n🔄 24/7 automated trading\n🚀 Never pay again - lifetime updates included\n✅ 30-day guarantee'
             }
         }
 
-        # Only add email-related parameters if email is provided
         if email:
             checkout_session_params['customer_email'] = email
             checkout_session_params['metadata']['email'] = email
 
-        checkout_session = stripe.checkout.Session.create(**checkout_session_params)
+        logger.info("Creating Stripe session with params: %s", checkout_session_params)
+        
+        try:
+            checkout_session = stripe.checkout.Session.create(**checkout_session_params)
+            logger.info("Successfully created checkout session: %s", checkout_session.id)
+        except stripe.error.StripeError as e:
+            logger.error("Stripe error creating session: %s", str(e))
+            return Response({
+                'error': f'Stripe error: {str(e)}'
+            }, status=400)
 
         return Response({
             'sessionId': checkout_session.id
         })
 
-    except stripe.error.StripeError as e:
-        logger.error(f"Stripe error: {str(e)}")
-        return Response({'error': str(e)}, status=400)
     except Exception as e:
-        logger.error(f"Checkout session error: {str(e)}", exc_info=True)
-        return Response({'error': 'Failed to create checkout session'}, status=500)
+        logger.error("Checkout session error: %s", str(e), exc_info=True)
+        return Response({
+            'error': f'Failed to create checkout session: {str(e)}'
+        }, status=500)
 
 @api_view(['POST'])
 @csrf_exempt
