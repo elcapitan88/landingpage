@@ -8,16 +8,28 @@ services:
       repo: elcapitan88/landingpageprjct
     source_dir: backend
     instance_size_slug: basic-xs
-    build_command: pip install -r requirements.txt
+    build_command: |
+      echo "Installing requirements..."
+      pip install -r requirements.txt
+      echo "Running migrations..."
+      python manage.py migrate
+      echo "Creating initial config..."
+      python manage.py shell <<EOF
+      from prelaunch.models import LifetimeMembershipConfig
+      if not LifetimeMembershipConfig.objects.exists():
+          LifetimeMembershipConfig.objects.create(
+              price=299.00,
+              is_active=True,
+              max_slots=100,
+              slots_taken=0
+          )
+      EOF
+    run_command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
     envs:
       - key: DJANGO_SETTINGS_MODULE
         value: core.settings
       - key: PYTHONPATH
         value: .
-      - key: DISABLE_COLLECTSTATIC
-        value: "1"
-      - key: NO_COLLECTSTATIC
-        value: "1"
       - key: PORT
         value: "8000"
     http_port: 8000
