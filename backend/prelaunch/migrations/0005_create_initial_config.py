@@ -15,7 +15,7 @@ def reverse_migration(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('prelaunch', 'previous_migration_name'),  # Replace with your last migration name
+        ('prelaunch', '0004_lifetimembershipconfig'),  # Assuming this is your last migration
     ]
 
     operations = [
