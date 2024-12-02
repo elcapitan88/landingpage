@@ -26,15 +26,18 @@ def subscribe(request):
     """Handle newsletter/waitlist subscriptions."""
     logger.info("Subscribe endpoint hit")
     try:
+        logger.info(f"Request body: {request.body}")
         data = json.loads(request.body)
         email = data.get('email')
         
         if not email:
+            logger.error("No email provided")
             return JsonResponse({'error': 'Email is required'}, status=400)
 
         try:
             validate_email(email)
         except ValidationError:
+            logger.error(f"Invalid email format: {email}")
             return JsonResponse({'error': 'Invalid email format'}, status=400)
 
         # Use get_or_create to handle duplicate emails
