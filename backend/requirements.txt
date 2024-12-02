@@ -3,3 +3,5 @@ gunicorn==21.2.0
 django-cors-headers==4.3.1
 stripe==7.10.0
 djangorestframework==3.14.0
+psycopg2-binary==2.9.9  # Add this for PostgreSQL support
+dj-database-url==2.1.0  # Add this for database URL parsing
