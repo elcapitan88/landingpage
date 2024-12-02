@@ -83,27 +83,16 @@ const ExitIntentPopup = ({ onSubscribe, onPurchase, remainingSpots }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+  
     try {
+      if (!email) {
+        throw new Error('Email is required');
+      }
+      
       await onSubscribe(email);
-      
-      toast({
-        title: "Success!",
-        description: "You're on the exclusive pre-launch list! Watch for special updates.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      
       setIsOpen(false);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Please try again with a valid email.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      console.error('Submission error:', error);
     } finally {
       setIsSubmitting(false);
     }
