@@ -55,19 +55,18 @@ const App = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleEarlyAccess = async (e) => {
-    if (e && e.preventDefault) {
-      e.preventDefault();
-    }
+  const handleEarlyAccess = async (emailValue) => {
     setIsSubmitting(true);
     
     try {
-      if (!email) {
+      console.log('handleEarlyAccess received email:', emailValue);
+      
+      if (!emailValue) {
         throw new Error('Email is required');
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
+      if (!emailRegex.test(emailValue)) {
         throw new Error('Please enter a valid email address');
       }
 
@@ -77,7 +76,7 @@ const App = () => {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: emailValue }),
       });
 
       if (!response.ok) {
@@ -107,6 +106,7 @@ const App = () => {
         duration: 5000,
         isClosable: true,
       });
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
