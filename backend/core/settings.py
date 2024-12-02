@@ -83,6 +83,7 @@ DATABASES = {
 CORS_ALLOWED_ORIGINS = [
     "https://atomiktrading.io",
     "https://www.atomiktrading.io",
+    "https://api.atomiktrading.io"
 ]
 
 CORS_ALLOW_METHODS = [
